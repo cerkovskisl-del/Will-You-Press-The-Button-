@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="light">
+<html lang="lv" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -18,6 +18,10 @@
             --box-border: #e2e8f0;
             --btn-disabled-bg: #edf2f7;
             --shadow: rgba(0, 0, 0, 0.08);
+            --accent-yes: #48bb78;
+            --accent-yes-dark: #2f855a;
+            --accent-no: #f56565;
+            --accent-no-dark: #c53030;
         }
 
         [data-theme="dark"] {
@@ -64,6 +68,12 @@
             z-index: 10;
         }
 
+        .controls-right {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
         .streak-counter {
             background: var(--card-bg);
             padding: 8px 16px;
@@ -76,7 +86,7 @@
             gap: 6px;
         }
 
-        .theme-toggle {
+        .theme-toggle, .lang-toggle {
             background: var(--card-bg);
             border: none;
             padding: 10px;
@@ -86,6 +96,12 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 700;
+            color: var(--text-main);
+            font-size: 0.9rem;
+            min-width: 45px;
+            height: 42px;
         }
 
         .theme-toggle svg {
@@ -103,7 +119,7 @@
             background-color: var(--card-bg);
             border-radius: 32px;
             box-shadow: 0 20px 60px var(--shadow);
-            padding: 50px 40px;
+            padding: 45px 40px;
             width: 100%;
             max-width: 680px;
             text-align: center;
@@ -114,29 +130,46 @@
             animation: cardPop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
         }
 
+        .progress-container {
+            width: 100%;
+            height: 6px;
+            background: var(--box-bg);
+            border-radius: 3px;
+            margin-bottom: 25px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #3182ce, #63b3ed);
+            transition: width 0.4s ease;
+        }
+
         h1 {
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             font-weight: 700;
             color: var(--text-muted);
             text-transform: uppercase;
             letter-spacing: 2px;
-            margin-bottom: 30px;
+            margin-bottom: 25px;
         }
 
         .dilemma-box {
             background: var(--box-bg);
-            border-radius: 20px;
-            padding: 30px;
+            border-radius: 24px;
+            padding: 35px 25px;
             border: 2px dashed var(--box-border);
-            margin-bottom: 40px;
-            min-height: 160px;
+            margin-bottom: 35px;
+            min-height: 170px;
             display: flex;
             align-items: center;
             justify-content: center;
         }
 
         .dilemma-text {
-            font-size: 1.5rem;
+            font-size: 1.45rem;
             font-weight: 700;
             line-height: 1.5;
         }
@@ -150,15 +183,16 @@
         .btn-wrapper {
             position: relative;
             border-radius: 20px;
+            padding-bottom: 6px;
         }
 
-        .wrapper-yes { background: #2f855a; }
-        .wrapper-no { background: #c53030; }
+        .wrapper-yes { background: var(--accent-yes-dark); }
+        .wrapper-no { background: var(--accent-no-dark); }
 
         .btn {
             width: 100%;
             font-family: 'Poppins', sans-serif;
-            font-size: 1.3rem;
+            font-size: 1.25rem;
             font-weight: 700;
             padding: 20px 30px;
             border: none;
@@ -174,8 +208,8 @@
             outline: none;
         }
 
-        .btn-yes { background-color: #48bb78; color: white; }
-        .btn-no { background-color: #f56565; color: white; }
+        .btn-yes { background-color: var(--accent-yes); color: white; }
+        .btn-no { background-color: var(--accent-no); color: white; }
 
         .btn-progress {
             position: absolute;
@@ -218,8 +252,8 @@
             background: transparent;
         }
 
-        .revealed .btn-yes { background-color: var(--btn-disabled-bg); color: #48bb78; }
-        .revealed .btn-no { background-color: var(--btn-disabled-bg); color: #f56565; }
+        .revealed .btn-yes { background-color: var(--btn-disabled-bg); color: var(--accent-yes); }
+        .revealed .btn-no { background-color: var(--btn-disabled-bg); color: var(--accent-no); }
 
         .revealed .btn.selected {
             box-shadow: inset 0 0 0 4px var(--text-main);
@@ -252,25 +286,31 @@
 
     <div class="top-bar">
         <div class="streak-counter">🔥 Streak: <span id="streak-val">0</span></div>
-        <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">
-            <svg viewBox="0 0 24 24" id="theme-icon">
-                <path d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m12.728 0l-.707-.707M6.343 6.343l-.707-.707M12 7a5 5 0 100 10 5 5 0 000-10z" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-            </svg>
-        </button>
+        <div class="controls-right">
+            <button class="lang-toggle" onclick="toggleLanguage()" id="lang-btn">LV</button>
+            <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">
+                <svg viewBox="0 0 24 24" id="theme-icon">
+                    <path d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m12.728 0l-.707-.707M6.343 6.343l-.707-.707M12 7a5 5 0 100 10 5 5 0 000-10z" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+            </button>
+        </div>
     </div>
 
     <div class="container" id="game-container">
-        <h1>Will You Press The Button?</h1>
+        <div class="progress-container">
+            <div class="progress-bar" id="top-progress"></div>
+        </div>
+        <h1 id="game-title">Will You Press The Button?</h1>
         
         <div class="dilemma-box">
-            <div class="dilemma-text" id="dilemma-text">Loading dilemma...</div>
+            <div class="dilemma-text" id="dilemma-text">Ielādē...</div>
         </div>
         
         <div class="options" id="options-container">
             <div class="btn-wrapper wrapper-yes">
                 <button class="btn btn-yes" onclick="makeChoice('yes')">
                     <div class="btn-progress" id="progress-yes"></div>
-                    <span>I will press it!</span>
+                    <span id="text-yes">I will press it!</span>
                     <span class="percent" id="percent-yes">0%</span>
                 </button>
             </div>
@@ -278,7 +318,7 @@
             <div class="btn-wrapper wrapper-no">
                 <button class="btn btn-no" onclick="makeChoice('no')">
                     <div class="btn-progress" id="progress-no"></div>
-                    <span>No way</span>
+                    <span id="text-no">No way</span>
                     <span class="percent" id="percent-no">0%</span>
                 </button>
             </div>
@@ -288,7 +328,13 @@
     </div>
 
     <script>
-        const defaultDilemmas = [
+        const translations = {
+            en: { title: "Will You Press The Button?", yes: "I will press it!", no: "No way", question: "Question", of: "of" },
+            ru: { title: "Нажмёшь ли ты кнопку?", yes: "Я нажму её!", no: "Ни за что", question: "Вопрос", of: "из" },
+            lv: { title: "Vai Tu Nospiedīsi Pogu?", yes: "Es nospiedīšu!", no: "Nekādā gadījumā", question: "Jautājums", of: "no" }
+        };
+
+        const defaultDilemmasEN = [
             { text: "You can fly, BUT you can only hover 30 centimeters above the ground. Will you press it?", yes: 74, no: 26 },
             { text: "You know every language in the world, BUT you can only speak in Shrek's voice. Will you press it?", yes: 85, no: 15 },
             { text: "You become the world's best hacker, BUT circus music plays loudly in the background every time you touch a computer. Will you press it?", yes: 62, no: 38 },
@@ -343,7 +389,118 @@
             { text: "You get an infinite battery on all your personal devices, BUT their screens are permanently set to 10% maximum brightness. Will you press it?", yes: 41, no: 59 }
         ];
 
-        let dilemmas = JSON.parse(localStorage.getItem('dilemma_stats')) || defaultDilemmas;
+        const defaultDilemmasRU = [
+            { text: "Ты можешь летать, НО только на высоте 30 сантиметров от земли. Нажмёшь кнопку?", yes: 74, no: 26 },
+            { text: "Ты знаешь все языки мира, НО можешь говорить только голосом Шрека. Нажмёшь кнопку?", yes: 85, no: 15 },
+            { text: "Ты станешь лучшим хакером в мире, НО каждый раз при касании компьютера будет громко играть цирковая музыка. Нажмёшь кнопку?", yes: 62, no: 38 },
+            { text: "В твоем кармане всегда будет точная сумма для покупки чего угодно, НО ты больше никогда не сможешь пользоваться интернетом. Нажмёшь кнопку?", yes: 21, no: 79 },
+            { text: "Ты можешь телепортироваться куда угодно, НО всегда будешь прибывать мокрым до нитки и с носком на голове. Нажмёшь кнопку?", yes: 91, no: 9 },
+            { text: "Ты получишь $10,000,000, НО каждый раз, когда ты будешь давать кому-то 'пять', этот человек будет сильно ударяться мизинцем. Нажмёшь кнопку?", yes: 88, no: 12 },
+            { text: "Ты можешь останавливать время, НО пока оно остановлено, ты стареешь в два раза быстрее. Нажмёшь кнопку?", yes: 54, no: 46 },
+            { text: "У тебя иммунитет ко всем болезням, НО в темноте твоя кожа светится ярко-неоновым зеленым цветом. Нажмёшь кнопку?", yes: 68, no: 32 },
+            { text: "Ты можешь читать мысли людей, НО они всегда слышат громкий звук 'динь', когда ты это делаешь. Нажмёшь кнопку?", yes: 71, no: 29 },
+            { text: "Ты получишь пожизненный запас любимой еды, НО она всегда будет слишком горячей, чтобы есть её с комфортом. Нажмёшь кнопку?", yes: 80, no: 20 },
+            { text: "Ты можешь менять внешность по щелчку пальцев, НО твой голос навсегда останется таким, будто ты вдохнул гелий. Нажмёшь кнопку?", yes: 75, no: 25 },
+            { text: "Ты станешь всемирно известным музыкантом, НО умеешь играть только на казу. Нажмёшь кнопку?", yes: 45, no: 55 },
+            { text: "Ты можешь запомнить любую книгу, просто прикоснувшись к ней, НО при этом забываешь имя своего двоюродного брата. Нажмёшь кнопку?", yes: 82, no: 18 },
+            { text: "Ты можешь бегать со скоростью спорткара, НО во время бега должен громко имитировать звук мотора ртом. Нажмёшь кнопку?", yes: 89, no: 11 },
+            { text: "Тебе больше никогда не нужно спать и ты не устаешь, НО у тебя вырастут усы, которые невозможно сбрить. Нажмёшь кнопку?", yes: 63, no: 37 },
+            { text: "У тебя будет настоящий световой меч, НО он включается случайно один раз каждый день. Нажмёшь кнопку?", yes: 57, no: 43 },
+            { text: "Ты можешь призвать любой предмет из видеоигр в реальность, НО через 10 минут он исчезнет. Нажмёшь кнопку?", yes: 93, no: 7 },
+            { text: "Ты станешь президентом своей страны, НО обязан носить клоунский нос на всех официальных встречах. Нажмёшь кнопку?", yes: 51, no: 49 },
+            { text: "Ты можешь разговаривать с животными, НО они только жалуются на погоду и свои проблемы. Нажмёшь кнопку?", yes: 76, no: 24 },
+            { text: "У тебя будет пульт, заглушающий бесящих людей в реальности, НО ты теряешь вкус к еде на 1 час после использования. Нажмёшь кнопку?", yes: 84, no: 16 },
+            { text: "У тебя идеальное зрение 20/20 и ты видишь сквозь стены, НО ты станешь полным дальтоником. Нажмёшь кнопку?", yes: 66, no: 34 },
+            { text: "Ты можешь идеально сымитировать любой звук или голос, НО сразу после этого начинаешь безудержно чихать. Нажмёшь кнопку?", yes: 70, no: 30 },
+            { text: "Ты можешь дышать под водой, НО акулы находят тебя безумно привлекательным. Нажмёшь кнопку?", yes: 48, no: 52 },
+            { text: "Ты станешь гениальным шеф-поваром, НО все твои блюда будут выглядеть невероятно уродливо. Нажмёшь кнопку?", yes: 90, no: 10 },
+            { text: "Ты можешь становиться невидимкой, НО только когда твои глаза полностью закрыты. Нажмёшь кнопку?", yes: 59, no: 41 },
+            { text: "Тебе платят $500 каждый день просто за то, что ты существуешь, НО ты больше никогда не сможешь носить обувь. Нажмёшь кнопку?", yes: 73, no: 27 },
+            { text: "Ты станешь лучшим игроком в своей любимой игре, НО сможешь играть в неё только на 5-дюймовом экране. Нажмёшь кнопку?", yes: 61, no: 39 },
+            { text: "Ты можешь убрать всю комнату одним щелчком пальцев, НО твоя подушка всегда будет теплой с обеих сторон. Нажмёшь кнопку?", yes: 77, no: 23 },
+            { text: "Ты найдешь кошелек, дающий $20 каждый раз, когда ты его закрываешь, НО ты навсегда уменьшишься в росте на 1 сантиметр. Нажмёшь кнопку?", yes: 35, no: 65 },
+            { text: "Ты можешь управлять техникой силой мысли, НО раз в час перед твоими глазами будет всплывать случайная баннерная реклама. Нажмёшь кнопку?", yes: 69, no: 31 },
+            { text: "Ты станешь легендарным актером, НО играть будешь только злодеев, и в жизни тебя все будут тайно ненавидеть. Нажмёшь кнопку?", yes: 38, no: 62 },
+            { text: "Ты полетишь на Марс бесплатно, НО полет займет 5 лет, и с собой можно взять только один фильм. Нажмёшь кнопку?", yes: 42, no: 58 },
+            { text: "В твоем распоряжении будет армия из 1000 обученных голубей, НО они будут гадить на твою машину раз в неделю. Нажмёшь кнопку?", yes: 81, no: 19 },
+            { text: "У тебя никогда не будет ожогов от горячей еды или «заморозки мозга», НО пить можно только через тонкую трубочку от WD-40. Нажмёшь кнопку?", yes: 55, no: 45 },
+            { text: "Ты можешь предсказывать будущее со 100% точностью, НО только события, которые произойдут ровно через 5 секунд. Нажмёшь кнопку?", yes: 72, no: 28 },
+            { text: "Ты станешь известным супергероем, НО твой костюм будет полностью сделан из упаковочной пупырчатой пленки. Нажмёшь кнопку?", yes: 86, no: 14 },
+            { text: "Ты можешь превратить любой предмет в чистое золото прикосновением, НО через 24 часа оно снова превратится в мусор. Нажмёшь кнопку?", yes: 64, no: 36 },
+            { text: "Ты будешь жить в роскошном особняке бесплатно, НО в дверь всегда будут звонить ровно в 3:33 ночи. Нажмёшь кнопку?", yes: 58, no: 42 },
+            { text: "Ты можешь управлять погодой, НО она всегда будет в точности соответствовать твоему настроению. Нажмёшь кнопку?", yes: 67, no: 33 },
+            { text: "У тебя будет ручной динозавр, который слушается тебя, НО он съедает мяса на $500 каждый день. Нажмёшь кнопку?", yes: 49, no: 51 },
+            { text: "Ты мгновенно узнаешь, если тебе врут, НО остаток дня после этого обязан говорить только чистую правду. Нажмёшь кнопку?", yes: 78, no: 22 },
+            { text: "Ты сможешь прыгать на 10 метров в высоту, НО у тебя нет защиты от падения — нужно приземляться идеально на ноги. Нажмёшь кнопку?", yes: 31, no: 69 },
+            { text: "Ты можешь скачать любой навык в мозг как в Матрице, НО установка сопровождается 3 днями жуткой головной боли. Нажмёшь кнопку?", yes: 87, no: 13 },
+            { text: "У тебя будет коробка, мгновенно копирующая любой предмет внутри, НО копия всегда слегка пахнет старым сыром. Нажмёшь кнопку?", yes: 92, no: 8 },
+            { text: "Ты овладеешь всеми музыкальными инструментами, НО сможешь выступать только в полных средневековых рыцарских доспехах. Нажмёшь кнопку?", yes: 74, no: 26 },
+            { text: "Ты можешь разговаривать с растениями и ускорять их рост, НО они драматично кричат, когда ты их подрезаешь. Нажмёшь кнопку?", yes: 53, no: 47 },
+            { text: "У тебя будет магическая сумка с любой едой, которую ты захочешь, НО она тихо оскорбляет тебя каждый раз, когда ты её открываешь. Нажмёшь кнопку?", yes: 85, no: 15 },
+            { text: "Ты можешь путешествовать в прошлое, НО только на 60 секунд, после чего тебя затягивает обратно. Нажмёшь кнопку?", yes: 79, no: 21 },
+            { text: "Ты выспишься за секунду и станешь звездой интернета с миллионами подписчиков, НО скорость твоего интернета навсегда упадет до 1 Мбит/с. Нажмёшь кнопку?", yes: 25, no: 75 },
+            { text: "Ты можешь мгновенно залечить любой мелкий порез или ушиб, НО для этого нужно станцевать глупый победный танец. Нажмёшь кнопку?", yes: 95, no: 5 },
+            { text: "Ты полностью контролируешь свои сны, НО во сне храпишь как заведенная бензопила. Нажмёшь кнопку?", yes: 63, no: 37 },
+            { text: "Аккумулятор на всех твоих гаджетах станет бесконечным, НО яркость экрана будет навсегда заблокирована на 10%. Нажмёшь кнопку?", yes: 41, no: 59 }
+        ];
+
+        const defaultDilemmasLV = [
+            { text: "Tu spēj lidot, BET vari tikai karāties 30 centimetrus virs zemes. Vai nospiedīsi pogu?", yes: 74, no: 26 },
+            { text: "Tu zini visas pasaules valodas, BET vari runāt tikai Šreka balsī. Vai nospiedīsi pogu?", yes: 85, no: 15 },
+            { text: "Tu kļūsti par pasaulē labāko hakeri, BET katru reizi, kad pieskaries datoram, fonā skaļi skan cirka mūzika. Vai nospiedīsi pogu?", yes: 62, no: 38 },
+            { text: "Tev kabatā vienmēr ir precīza naudas summa jebkam, ko vēlies nopirkt, BET tu vairs nekad nevarēsi lietot internetu. Vai nospiedīsi pogu?", yes: 21, no: 79 },
+            { text: "Tu vari acumirklī teleportēties jebkur, BET vienmēr ierodies pilnīgi izmircis un ar zeķi uz galvas. Vai nospiedīsi pogu?", yes: 91, no: 9 },
+            { text: "Tu saņem $10 000 000, BUT katru reizi, kad kādam paspied roku vai iedod 'pieci', viņš spēcīgi sasit kājas īkšķi. Vai nospiedīsi pogu?", yes: 88, no: 12 },
+            { text: "Tu vari apturēt laiku, kad vien vēlies, BUT kamēr laiks ir apturēts, tu noveco divreiz ātrāk. Vai nospiedīsi pogu?", yes: 54, no: 46 },
+            { text: "Tu esi imūns pret visām slimībām, BUT tumsā tava āda spīd spilgti neonzaļā krāsā. Vai nospiedīsi pogu?", yes: 68, no: 32 },
+            { text: "Tu vari lasīt cilvēku domas, BUT viņi vienmēr dzird skaļu 'dziņ' skaņu, kad tu to dari. Vai nospiedīsi pogu?", yes: 71, no: 29 },
+            { text: "Tu laimē sava mīļākā ēdiena krājumus visam mūžam, BUT tas vienmēr ir nedaudz par karstu, lai ēstu ērti. Vai nospiedīsi pogu?", yes: 80, no: 20 },
+            { text: "Tu vari mainīt savu izskatu pēc patikas, BUT tava balss uz visiem laikiem izklausās tā, it kā tu tikko būtu ieelpojis hēliju. Vai nospiedīsi pogu?", yes: 75, no: 25 },
+            { text: "Tu kļūsti par pasaulslavenu mūziķi, BUT proti spēlēt tikai kazū (plēvītes stabuli). Vai nospiedīsi pogu?", yes: 45, no: 55 },
+            { text: "Tu vari uzreiz iegaumēt jebkuru grāmatu, tai pieskaroties, BUT tu aizmirsti sava brālēna vārdu katru reizi, kad to dari. Vai nospiedīsi pogu?", yes: 82, no: 18 },
+            { text: "Tu spēj skriet tikpat ātri kā sporta automašīna, BUT skrienot tev ar muti jārada skaņas dzinēja trokšņi. Vai nospiedīsi pogu?", yes: 89, no: 11 },
+            { text: "Tev nekad vairs nav jāguļ un tu nepiekūsti, BUT tev izaug ūsas, kuras nevar noskūt. Vai nospiedīsi pogu?", yes: 63, no: 37 },
+            { text: "Tu iegūsti īstu, strādājošu gaismas zobenu, BUT tas nejauši ieslēdzas vienu reizi dienā. Vai nospiedīsi pogu?", yes: 57, no: 43 },
+            { text: "Tu vari izsaukt jebkuru priekšmetu no datorspēlēm realitātē, BUT tas pazūd pēc 10 minūtēm. Vai nospiedīsi pogu?", yes: 93, no: 7 },
+            { text: "Tu kļūsti par savas valsts prezidentu, BUT tev jānēsā klauna deguns katrā oficiālajā sanāksmē. Vai nospiedīsi pogu?", yes: 51, no: 49 },
+            { text: "Tu vari sarunāties ar dzīvniekiem, BUT viņi tikai sūdzas par laikapstākļiem un savu personīgo dzīvi. Vai nospiedīsi pogu?", yes: 76, no: 24 },
+            { text: "Tu atrodi tālvadības pulti, kas var izslēgt skaņu kaitinošiem cilvēkiem, BUT pēc katras lietošanas reizes tu uz 1 stundu zaudē garšas izjūtu. Vai nospiedīsi pogu?", yes: 84, no: 16 },
+            { text: "Tev ir perfekta redze un tu redzi cauri sienām, BUT tu kļūsti pilnīgi krāsu akls. Vai nospiedīsi pogu?", yes: 66, no: 34 },
+            { text: "Tu vari perfekti atdarināt jebkuru skaņu vai balsi, BUT uzreiz pēc tam tu nekontrolējami šķaudi. Vai nospiedīsi pogu?", yes: 70, no: 30 },
+            { text: "Tu vari elpot zem ūdens, BUT haizivis uzskata tevi par ārkārtīgi pievilcīgu. Vai nospiedīsi pogu?", yes: 48, no: 52 },
+            { text: "Tu kļūsti par ģeniālu pavāru, kurš spēj pagatavot jebko, BUT viss, ko tu uztaisi, izskatās neticami neglīti. Vai nospiedīsi pogu?", yes: 90, no: 10 },
+            { text: "Tu vari kļūt neredzams, BUT tikai tad, kad tavas acis ir pilnībā aizvērtas. Vai nospiedīsi pogu?", yes: 59, no: 41 },
+            { text: "Tev maksā $500 katru dienu tikai par to, ka eksistē, BUT tu nekad vairs nedrīksti nēsāt apavus. Vai nospiedīsi pogu?", yes: 73, no: 27 },
+            { text: "Tu kļūsti par absolūti labāko spēlētāju savā mīļākajā spēlē, BUT drīksti to spēlēt tikai 5 collu ekrānā. Vai nospiedīsi pogu?", yes: 61, no: 39 },
+            { text: "Tu vari uzreiz uzkopt visu savu istabu, vienkārši uzsitot knipi, BUT tavs spilvens abās pusēs vienmēr ir silts. Vai nospiedīsi pogu?", yes: 77, no: 23 },
+            { text: "Tu atrodi maku, kas katru reizi pēc aizvēršanas rada $20 banknoti, BUT tu uz visiem laikiem kļūsti par 1 centimetru īsāks. Vai nospiedīsi pogu?", yes: 35, no: 65 },
+            { text: "Tu vari vadīt tehnoloģijas ar prātu, BUT reizi stundā tavā redzes laukā parādās nejauša uznirstošā reklāma. Vai nospiedīsi pogu?", yes: 69, no: 31 },
+            { text: "Tu kļūsti par leģendāru aktieri, BUT vari spēlēt tikai ļaundarus un visi tevi dzīvē slepeni ienīst. Vai nospiedīsi pogu?", yes: 38, no: 62 },
+            { text: "Tu saņem bezmaksas braucienu uz Marsu, BUT lidojums ilgst 5 gadus un līdzi drīkst paņemt tikai vienu filmu. Vai nospiedīsi pogu?", yes: 42, no: 58 },
+            { text: "Tavā pakļautībā ir 1000 lieliski apmācītu baložu armija, BUT viņi reizi nedēļā apdēza tavu mašīnu. Vai nospiedīsi pogu?", yes: 81, no: 19 },
+            { text: "Tev nekad vairs nesals smadzenes no aukstuma un neapdedzināsies ar ēdienu, BUT dzert drīkst tikai caur tievu WD-40 salmiņu. Vai nospiedīsi pogu?", yes: 55, no: 45 },
+            { text: "Tu spēj paredzēt nākotni ar 100% precizitāti, BUT tikai notikumus, kas notiks tieši pēc 5 sekundēm. Vai nospiedīsi pogu?", yes: 72, no: 28 },
+            { text: "Tu kļūsti par slavenu supervaroni, BUT tavs tērps ir pilnībā veidots no burbuļplēves. Vai nospiedīsi pogu?", yes: 86, no: 14 },
+            { text: "Tu vari pārvērst jebkuru priekšmetu tīrā zeltā, tam pieskaroties, BUT pēc 24 stundām zelts pārvēršas atpakaļ par miskasti. Vai nospiedīsi pogu?", yes: 64, no: 36 },
+            { text: "Tu vari bez maksas dzīvot greznā savrupmājā, BUT pie durvīm vienmēr kāds zvana tieši 3:33 naktī. Vai nospiedīsi pogu?", yes: 58, no: 42 },
+            { text: "Tu vari kontrolēt laikapstākļus, BUT tie vienmēr precīzi atbilst tavam pašreizējam garastāvoklim. Vai nospiedīsi pogu?", yes: 67, no: 33 },
+            { text: "Tev ir mājdzīvnieks dinozaurs, kas klausa katru tavu pavēli, BUT viņš katru dienu apēd gaļu $500 vērtībā. Vai nospiedīsi pogu?", yes: 49, no: 51 },
+            { text: "Tu automātiski zini, ja kāds tev melo, BUT atlikušo dienas daļu pēc tam tu drīksti runāt tikai tīru patiesību. Vai nospiedīsi pogu?", yes: 78, no: 22 },
+            { text: "Tu spēj uzlēkt 10 metru augstumā, BUT tev nav piezemēšanās aizsardzības — jānosēžas perfekti uz kājām. Vai nospiedīsi pogu?", yes: 31, no: 69 },
+            { text: "Tu vari lejupielādēt jebkuru prasmi tieši smadzenēs kā 'Matriksa' filmā, BUT instalācija aizņem 3 dienas ar briesmīgām galvassāpēm. Vai nospiedīsi pogu?", yes: 87, no: 13 },
+            { text: "Tu saņem kasti, kas spēj uzreiz dublēt jebkuru priekšmetu tajā, BUT kopija vienmēr nedaudz smaržo pēc veca siera. Vai nospiedīsi pogu?", yes: 92, no: 8 },
+            { text: "Tu pārvaldi visus mūzikas instrumentus, BUT drīksti uzstāties tikai pilnās viduslaiku bruņinieku bruņās. Vai nospiedīsi pogu?", yes: 74, no: 26 },
+            { text: "Tu vari sarunāties ar augiem un likt tiem augt griezdamies, BUT tie dramatiski kliedz katru reizi, kad tu tos apgriez. Vai nospiedīsi pogu?", yes: 53, no: 47 },
+            { text: "Tev ir maģiska soma, kurā vienmēr ir uzkoda, kuru kāro, BUT tā klusi tevi aizvaino katru reizi, kad to atver. Vai nospiedīsi pogu?", yes: 85, no: 15 },
+            { text: "Tu vari ceļot uz pagātni, BUT vari tur palikt tikai 60 sekundes, pirms tiec ierauts atpakaļ. Vai nospiedīsi pogu?", yes: 79, no: 21 },
+            { text: "Tu acumirklī izguli visu miegu un kļūsti par interneta zvaigzni ar miljoniem sekotāju, BUT tavs interneta ātrums uz mūžu ir ierobežots līdz 1 Mbps. Vai nospiedīsi pogu?", yes: 25, no: 75 },
+            { text: "Tu spēj uzreiz dziedēt jebkuru nelielu griezumu vai zilumu, BUT lai tas nostrādātu, tev jānodejo smieklīga uzvaras deja. Vai nospiedīsi pogu?", yes: 95, no: 5 },
+            { text: "Tu pilnībā kontrolē savus sapņus, BUT miegā krāc tikpat skaļi kā motorzāģis. Vai nospiedīsi pogu?", yes: 63, no: 37 },
+            { text: "Visiem taviem gadžetiem būs bezgalīgs akumulators, BUT to ekrāna spilgtums uz visiem laikiem būs bloķēts uz 10%. Vai nospiedīsi pogu?", yes: 41, no: 59 }
+        ];
+
+        let currentLang = localStorage.getItem('game_lang') || 'lv';
+        let dilemmas = [];
         let currentIndex = 0;
         let hasVoted = false;
         let streak = 0;
@@ -358,6 +515,30 @@
         const counterEl = document.getElementById("counter");
         const streakVal = document.getElementById("streak-val");
         const buttons = document.querySelectorAll(".btn");
+        const langBtn = document.getElementById("lang-btn");
+        const topProgressBar = document.getElementById("top-progress");
+
+        function initDilemmas() {
+            const storedIndex = localStorage.getItem(`index_${currentLang}`);
+            currentIndex = storedIndex ? parseInt(storedIndex, 10) : 0;
+
+            const stored = localStorage.getItem(`dilemmas_${currentLang}`);
+            if (stored) {
+                dilemmas = JSON.parse(stored);
+            } else {
+                if (currentLang === 'lv') dilemmas = JSON.parse(JSON.stringify(defaultDilemmasLV));
+                else if (currentLang === 'ru') dilemmas = JSON.parse(JSON.stringify(defaultDilemmasRU));
+                else dilemmas = JSON.parse(JSON.stringify(defaultDilemmasEN));
+            }
+        }
+
+        function updateInterfaceStrings() {
+            const strings = translations[currentLang];
+            document.getElementById("game-title").innerText = strings.title;
+            document.getElementById("text-yes").innerText = strings.yes;
+            document.getElementById("text-no").innerText = strings.no;
+            langBtn.innerText = currentLang.toUpperCase();
+        }
 
         function playSound(result) {
             const ctx = new (window.AudioContext || window.webkitAudioContext)();
@@ -414,7 +595,7 @@
 
                 particle.animate([
                     { transform: 'translate(-50%, -50%) scale(1.5)', opacity: 1 },
-                    { transform: `translate(calc(-50% + ${x}px), calc(-50% + ${y}px)) scale(0)`, opacity: 0 }
+                    { transform: `translate(calc(-50% + ${x}px), calc(-50% + ${y}px)) scale(0)', opacity: 0 }
                 ], {
                     duration: 700 + Math.random() * 400,
                     easing: 'cubic-bezier(0.1, 0.8, 0.3, 1)'
@@ -443,7 +624,11 @@
             percentYesEl.innerText = "0%";
             percentNoEl.innerText = "0%";
             
-            counterEl.innerText = `Question ${currentIndex + 1} of ${dilemmas.length}`;
+            const strings = translations[currentLang];
+            counterEl.innerText = `${strings.question} ${currentIndex + 1} ${strings.of} ${dilemmas.length}`;
+
+            const progressPct = ((currentIndex) / dilemmas.length) * 100;
+            topProgressBar.style.width = `${progressPct}%`;
         }
 
         function makeChoice(choice) {
@@ -459,7 +644,7 @@
                 dilemmas[currentIndex].no += 1;
             }
 
-            localStorage.setItem('dilemma_stats', JSON.stringify(dilemmas));
+            localStorage.setItem(`dilemmas_${currentLang}`, JSON.stringify(dilemmas));
 
             const current = dilemmas[currentIndex];
             const totalVotes = current.yes + current.no;
@@ -496,8 +681,24 @@
 
             setTimeout(() => {
                 currentIndex = (currentIndex + 1) % dilemmas.length;
+                localStorage.setItem(`index_${currentLang}`, currentIndex);
                 loadDilemma();
             }, 2800);
+        }
+
+        function toggleLanguage() {
+            if (currentLang === 'lv') currentLang = 'en';
+            else if (currentLang === 'en') currentLang = 'ru';
+            else currentLang = 'lv';
+
+            localStorage.setItem('game_lang', currentLang);
+            
+            streak = 0;
+            streakVal.innerText = streak;
+            
+            updateInterfaceStrings();
+            initDilemmas();
+            loadDilemma();
         }
 
         function toggleTheme() {
@@ -513,6 +714,8 @@
             }
         }
 
+        updateInterfaceStrings();
+        initDilemmas();
         loadDilemma();
     </script>
 </body>
