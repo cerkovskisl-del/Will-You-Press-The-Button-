@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="lv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Absurdo Dilemmu Aptauja</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f0f2f5;
+            color: #1a1a1a;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            background-color: #ffffff;
+            border-radius: 24px;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.06);
+            padding: 40px;
+            width: 100%;
+            max-width: 650px;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #8c92ac;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 20px;
+        }
+
+        .dilemma-text {
+            font-size: 1.6rem;
+            font-weight: 800;
+            line-height: 1.4;
+            margin-bottom: 40px;
+            min-height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .btn {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 600;
+            padding: 18px 30px;
+            border: none;
+            border-radius: 16px;
+            cursor: pointer;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .btn-yes {
+            background-color: #4ed964;
+            color: white;
+            box-shadow: 0 6px 20px rgba(78, 217, 100, 0.3);
+        }
+
+        .btn-yes:hover {
+            background-color: #3ec253;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(78, 217, 100, 0.4);
+        }
+
+        .btn-no {
+            background-color: #ff3b30;
+            color: white;
+            box-shadow: 0 6px 20px rgba(255, 59, 48, 0.3);
+        }
+
+        .btn-no:hover {
+            background-color: #e02e24;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 59, 48, 0.4);
+        }
+
+        .percent {
+            font-size: 1.4rem;
+            font-weight: 800;
+            opacity: 0;
+            transform: scale(0.5);
+            transition: all 0.3s ease;
+        }
+
+        /* Stili, kas ieslēdzas pēc balsojuma */
+        .revealed .btn {
+            pointer-events: none;
+            transform: none !important;
+            box-shadow: none;
+        }
+
+        .revealed .btn-yes {
+            background-color: #c2f4cc;
+            color: #1e7d2e;
+        }
+
+        .revealed .btn-no {
+            background-color: #ffccd0;
+            color: #b31d15;
+        }
+
+        /* Izceļam to pogu, kuru lietotājs izvēlējās */
+        .revealed .btn.selected {
+            box-shadow: 0 0 0 4px #1a1a1a;
+        }
+
+        .revealed .percent {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .next-container {
+            margin-top: 30px;
+            height: 50px;
+        }
+
+        .btn-next {
+            font-family: 'Poppins', sans-serif;
+            background-color: #1a1a1a;
+            color: white;
+            font-size: 1rem;
+            font-weight: 600;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.3s ease;
+            pointer-events: none;
+        }
+
+        .btn-next.show {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+
+        .btn-next:hover {
+            background-color: #333333;
+        }
+
+        .stats {
+            margin-top: 20px;
+            font-size: 0.9rem;
+            color: #8c92ac;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Vai tu pieņem?</h1>
+        <div class="dilemma-text" id="dilemma-text">Ielādē dilemmu...</div>
+        
+        <div class="options" id="options-container">
+            <button class="btn btn-yes" onclick="makeChoice('yes')">
+                <span>Es pieņemu!</span>
+                <span class="percent" id="percent-yes">0%</span>
+            </button>
+            <button class="btn btn-no" onclick="makeChoice('no')">
+                <span>Nē, paldies</span>
+                <span class="percent" id="percent-no">0%</span>
+            </button>
+        </div>
+
+        <div class="next-container">
+            <button class="btn-next" id="btn-next" onclick="nextDilemma()">Nākamā dilemma &rarr;</button>
+        </div>
+
+        <div class="stats" id="counter">Jautājums 1 no 5</div>
+    </div>
+
+    <script>
+        // Šeit tu vari pievienot tik daudz jautājumu, cik vēlies!
+        const dilemmas = [
+            {
+                text: "Tu vari lidot, BET tu spēj pacelties tikai 30 centimetrus virs zemes. Vai tu pieņem?",
+                yesPercent: 74,
+                noPercent: 26
+            },
+            {
+                text: "Tu zini visas pasaules valodas, BET tu runā tikai animācijas varoņa Šreka balsī. Vai tu pieņem?",
+                yesPercent: 85,
+                noPercent: 15
+            },
+            {
+                text: "Tu kļūsti par pasaules labāko hakeri, BET katru reizi, kad tu pieskaries datoram, fonā skaļi sāk skanēt cirka mūzika. Vai tu pieņem?",
+                yesPercent: 62,
+                noPercent: 38
+            },
+            {
+                text: "Tev vienmēr kabatā ir precīza skaidras naudas summa, lai nopirktu jebko, ko vēlies, BET tu vairs nekad nevari izmantot internetu. Vai tu pieņem?",
+                yesPercent: 41,
+                noPercent: 59
+            },
+            {
+                text: "Tu vari teleportēties uz jebkuru vietu pasaulē, BET tu vienmēr tur ierodies pilnīgi slapjš un ar zeķi galvā. Vai tu pieņem?",
+                yesPercent: 91,
+                noPercent: 9
+            }
+        ];
+
+        let currentIndex = 0;
+        let hasVoted = false;
+
+        const dilemmaTextEl = document.getElementById("dilemma-text");
+        const percentYesEl = document.getElementById("percent-yes");
+        const percentNoEl = document.getElementById("percent-no");
+        const optionsContainer = document.getElementById("options-container");
+        const btnNext = document.getElementById("btn-next");
+        const counterEl = document.getElementById("counter");
+        const buttons = document.querySelectorAll(".btn");
+
+        // Funkcija, kas ielādē aktuālo jautājumu
+        function loadDilemma() {
+            hasVoted = false;
+            optionsContainer.classList.remove("revealed");
+            btnNext.classList.remove("show");
+            
+            buttons.forEach(btn => btn.classList.remove("selected"));
+
+            const current = dilemmas[currentIndex];
+            dilemmaTextEl.innerText = current.text;
+            percentYesEl.innerText = current.yesPercent + "%";
+            percentNoEl.innerText = current.noPercent + "%";
+            
+            counterEl.innerText = `Jautājums ${currentIndex + 1} no ${dilemmas.length}`;
+        }
+
+        // Funkcija, kas nostrādā, kad uzspiež uz kādu no pogām
+        function makeChoice(choice) {
+            if (hasVoted) return; // Neļauj balsot divreiz
+            hasVoted = true;
+
+            optionsContainer.classList.add("revealed");
+
+            if (choice === 'yes') {
+                buttons[0].classList.add("selected");
+            } else {
+                buttons[1].classList.add("selected");
+            }
+
+            btnNext.classList.add("show"); // Parāda pogu "Nākamā dilemma"
+        }
+
+        // Pārslēdzas uz nākamo jautājumu
+        function nextDilemma() {
+            currentIndex++;
+            if (currentIndex >= dilemmas.length) {
+                currentIndex = 0; // Kad jautājumi beidzas, sākam no jauna
+            }
+            loadDilemma();
+        }
+
+        // Palaižam spēli pirmo reizi
+        loadDilemma();
+    </script>
+</body>
+</html>
