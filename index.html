@@ -319,8 +319,6 @@
                 </button>
             </div>
         </div>
-
-        <div class="stats" id="counter">Question 1 of 52</div>
     </div>
 
     <script>
@@ -485,7 +483,6 @@
         const progressYes = document.getElementById("progress-yes");
         const progressNo = document.getElementById("progress-no");
         const optionsContainer = document.getElementById("options-container");
-        const counterEl = document.getElementById("counter");
         const streakVal = document.getElementById("streak-val");
         const buttons = document.querySelectorAll(".btn");
         const langBtn = document.getElementById("lang-btn");
@@ -579,7 +576,7 @@
 
                 particle.animate([
                     { transform: 'translate(-50%, -50%) scale(1.2)', opacity: 1 },
-                    { transform: `translate(calc(-50% + ${x}px), calc(-50% + ${y}px)) scale(0)`, opacity: 0 }
+                    { transform: `translate(calc(-50% + ${x}px), calc(-50% + ${y}px)) scale(0)', opacity: 0 }
                 ], {
                     duration: 600 + Math.random() * 300,
                     easing: 'cubic-bezier(0.1, 0.8, 0.3, 1)'
@@ -606,9 +603,6 @@
 
             const current = dilemmas[currentIndex];
             dilemmaTextEl.innerText = current.text;
-            
-            const strings = translations[currentLang];
-            counterEl.innerText = `${strings.question} ${currentIndex + 1} ${strings.of} ${dilemmas.length}`;
 
             const progressPct = ((currentIndex + 1) / dilemmas.length) * 100;
             topProgressBar.style.width = `${progressPct}%`;
