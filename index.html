@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Will You Press The Button? | Ultimate Edition</title>
+    <title>Will You Press The Button? | Mega Edition</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;900&display=swap" rel="stylesheet">
@@ -95,7 +95,7 @@
         }
 
         @keyframes cardPop {
-            0% { transform: scale(0.95); opacity: 0; }
+            0% { transform: scale(0.96); opacity: 0; }
             100% { transform: scale(1); opacity: 1; }
         }
 
@@ -136,7 +136,7 @@
         }
 
         .dilemma-text {
-            font-size: 1.6rem;
+            font-size: 1.5rem;
             font-weight: 700;
             line-height: 1.5;
         }
@@ -284,7 +284,7 @@
             </div>
         </div>
 
-        <div class="stats" id="counter">Question 1 of 5</div>
+        <div class="stats" id="counter">Question 1 of 52</div>
     </div>
 
     <script>
@@ -293,7 +293,54 @@
             { text: "You know every language in the world, BUT you can only speak in Shrek's voice. Will you press it?", yes: 85, no: 15 },
             { text: "You become the world's best hacker, BUT circus music plays loudly in the background every time you touch a computer. Will you press it?", yes: 62, no: 38 },
             { text: "You always have the exact amount of cash in your pocket to buy anything you want, BUT you can never use the internet again. Will you press it?", yes: 21, no: 79 },
-            { text: "You can teleport anywhere instantly, BUT you always arrive completely soaking wet and wearing a sock on your head. Will you press it?", yes: 91, no: 9 }
+            { text: "You can teleport anywhere instantly, BUT you always arrive completely soaking wet and wearing a sock on your head. Will you press it?", yes: 91, no: 9 },
+            { text: "You get $10,000,000, BUT every time you high-five someone, they stub their toe. Will you press it?", yes: 88, no: 12 },
+            { text: "You can pause time whenever you want, BUT you age twice as fast while time is paused. Will you press it?", yes: 54, no: 46 },
+            { text: "You are immune to all diseases, BUT your skin glows bright neon green in the dark. Will you press it?", yes: 68, no: 32 },
+            { text: "You can read people's minds, BUT they always hear a loud 'ding' sound whenever you do it. Will you press it?", yes: 71, no: 29 },
+            { text: "You win a lifetime supply of your favorite food, BUT it is always slightly too hot to eat comfortably. Will you press it?", yes: 80, no: 20 },
+            { text: "You can change your physical appearance at will, BUT your voice permanently sounds like you just inhaled helium. Will you press it?", yes: 75, no: 25 },
+            { text: "You become a world-famous musician, BUT you can only play the kazoo. Will you press it?", yes: 45, no: 55 },
+            { text: "You can instantly memorize any book just by touching it, BUT you forget your own cousin's name every time you do. Will you press it?", yes: 82, no: 18 },
+            { text: "You can run as fast as a sports car, BUT you have to make loud engine noises with your mouth while running. Will you press it?", yes: 89, no: 11 },
+            { text: "You never have to sleep again and never get tired, BUT you grow a mustache that cannot be shaved. Will you press it?", yes: 63, no: 37 },
+            { text: "You get a real, functioning lightsaber, BUT it turns on randomly once every single day. Will you press it?", yes: 57, no: 43 },
+            { text: "You can summon any video game item into real life, BUT you can only use it for 10 minutes before it vanishes. Will you press it?", yes: 93, no: 7 },
+            { text: "You become the President of your country, BUT you have to wear a clown nose during every official meeting. Will you press it?", yes: 51, no: 49 },
+            { text: "You can speak to animals, BUT they only complain about the weather and their personal lives. Will you press it?", yes: 76, no: 24 },
+            { text: "You find a remote control that can mute annoying people in real life, BUT you lose your sense of taste for 1 hour every time you use it. Will you press it?", yes: 84, no: 16 },
+            { text: "You get perfect 20/20 vision and can see through walls, BUT you are permanently colorblind. Will you press it?", yes: 66, no: 34 },
+            { text: "You can perfectly mimic any sound or voice, BUT you sneeze uncontrollably immediately afterwards. Will you press it?", yes: 70, no: 30 },
+            { text: "You can breathe underwater, BUT sharks find you extremely attractive. Will you press it?", yes: 48, no: 52 },
+            { text: "You become a brilliant chef who can cook anything, BUT everything you make looks incredibly ugly. Will you press it?", yes: 90, no: 10 },
+            { text: "You can turn invisible, BUT only when your eyes are closed. Will you press it?", yes: 59, no: 41 },
+            { text: "You get paid $500 every single day just for existing, BUT you can never wear shoes again. Will you press it?", yes: 73, no: 27 },
+            { text: "You become the absolute best player in your favorite video game, BUT you can only play it on a 5-inch screen. Will you press it?", yes: 61, no: 39 },
+            { text: "You can instantly clean your entire room just by snapping your fingers, BUT your pillow is always warm on both sides. Will you press it?", yes: 77, no: 23 },
+            { text: "You find a wallet that generates a $20 bill every time you close it, BUT you lose 1 centimeter of height permanently. Will you press it?", yes: 35, no: 65 },
+            { text: "You can control technology with your mind, BUT a random pop-up ad appears in your vision once every hour. Will you press it?", yes: 69, no: 31 },
+            { text: "You become a legendary actor, BUT you can only play the villain and everyone secretly hates you in real life. Will you press it?", yes: 38, no: 62 },
+            { text: "You get to go on a free trip to Mars, BUT the flight takes 5 years and you can only bring one movie to watch. Will you press it?", yes: 42, no: 58 },
+            { text: "You can command a personal army of 1,000 highly trained pigeons, BUT they poop on your car once a week. Will you press it?", yes: 81, no: 19 },
+            { text: "You never get brain-freeze or burns from food again, BUT you can only drink beverages through a tiny WD-40 straw. Will you press it?", yes: 55, no: 45 },
+            { text: "You can predict the future with 100% accuracy, BUT only events that happen exactly 5 seconds from now. Will you press it?", yes: 72, no: 28 },
+            { text: "You become a famous superhero, BUT your costume is made entirely out of bubble wrap. Will you press it?", yes: 86, no: 14 },
+            { text: "You can turn any object into pure gold by touching it, BUT the gold turns back into trash after 24 hours. Will you press it?", yes: 64, no: 36 },
+            { text: "You get to live in a luxury mansion for free, BUT the doorbell rings every night at exactly 3:33 AM. Will you press it?", yes: 58, no: 42 },
+            { text: "You can control the weather, BUT it always matches your current emotional mood. Will you press it?", yes: 67, no: 33 },
+            { text: "You get a pet dinosaur that obeys your every command, BUT it eats $500 worth of meat every day. Will you press it?", yes: 49, no: 51 },
+            { text: "You automatically know if someone is lying to you, BUT you must speak the absolute truth for the rest of the day. Will you press it?", yes: 78, no: 22 },
+            { text: "You gain the ability to jump 10 meters high, BUT you have no landing protection and must land on your feet perfectly. Will you press it?", yes: 31, no: 69 },
+            { text: "You can download any skill directly into your brain Matrix-style, BUT it takes 3 days of intense headache to install. Will you press it?", yes: 87, no: 13 },
+            { text: "You receive a box that can instantly duplicate any item you put inside, BUT the duplicate smells faintly like old cheese. Will you press it?", yes: 92, no: 8 },
+            { text: "You become a master of all musical instruments, BUT you can only perform while wearing a full medieval suit of armor. Will you press it?", yes: 74, no: 26 },
+            { text: "You can talk to plants and make them grow instantly, BUT they scream dramatically whenever you trim them. Will you press it?", yes: 53, no: 47 },
+            { text: "You get a magical bag that always contains the perfect snack you crave, BUT it whispers insults to you every time you open it. Will you press it?", yes: 85, no: 15 },
+            { text: "You can travel to the past, BUT you can only stay there for 60 seconds before being pulled back. Will you press it?", yes: 79, no: 21 },
+            { text: "You become an internet sensation overnight with millions of followers, BUT your internet speed is permanently capped at 1 Mbps. Will you press it?", yes: 25, no: 75 },
+            { text: "You can heal any minor injury or cut instantly, BUT you have to do a little victory dance for it to work. Will you press it?", yes: 95, no: 5 },
+            { text: "You have absolute control over your dreams, BUT you snore as loud as a chainsaw while sleeping. Will you press it?", yes: 63, no: 37 },
+            { text: "You get an infinite battery on all your personal devices, BUT their screens are permanently set to 10% maximum brightness. Will you press it?", yes: 41, no: 59 }
         ];
 
         let dilemmas = JSON.parse(localStorage.getItem('dilemma_stats')) || defaultDilemmas;
@@ -335,6 +382,19 @@
                 osc.start();
                 osc.stop(ctx.currentTime + 0.25);
             }
+        }
+
+        function animatePercentage(element, start, end, duration) {
+            let startTimestamp = null;
+            const step = (timestamp) => {
+                if (!startTimestamp) startTimestamp = timestamp;
+                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                element.innerText = Math.floor(progress * (end - start) + start) + "%";
+                if (progress < 1) {
+                    window.requestAnimationFrame(step);
+                }
+            };
+            window.requestAnimationFrame(step);
         }
 
         function spawnParticles() {
@@ -380,12 +440,8 @@
             const current = dilemmas[currentIndex];
             dilemmaTextEl.innerText = current.text;
             
-            const totalVotes = current.yes + current.no;
-            const yesPercentage = Math.round((current.yes / totalVotes) * 100);
-            const noPercentage = 100 - yesPercentage;
-
-            percentYesEl.innerText = yesPercentage + "%";
-            percentNoEl.innerText = noPercentage + "%";
+            percentYesEl.innerText = "0%";
+            percentNoEl.innerText = "0%";
             
             counterEl.innerText = `Question ${currentIndex + 1} of ${dilemmas.length}`;
         }
@@ -430,8 +486,8 @@
             }
             streakVal.innerText = streak;
 
-            percentYesEl.innerText = yesPercentage + "%";
-            percentNoEl.innerText = noPercentage + "%";
+            animatePercentage(percentYesEl, 0, yesPercentage, 600);
+            animatePercentage(percentNoEl, 0, noPercentage, 600);
 
             setTimeout(() => {
                 progressYes.style.width = yesPercentage + "%";
@@ -441,7 +497,7 @@
             setTimeout(() => {
                 currentIndex = (currentIndex + 1) % dilemmas.length;
                 loadDilemma();
-            }, 2600);
+            }, 2800);
         }
 
         function toggleTheme() {
