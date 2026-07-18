@@ -323,9 +323,9 @@
 
     <script>
         const translations = {
-            en: { title: "Will You Press The Button?", yes: "I will press it!", no: "No way", question: "Question", of: "of" },
-            ru: { title: "Нажмёшь ли ты кнопку?", yes: "Я нажму её!", no: "Ни за что", question: "Вопрос", of: "из" },
-            lv: { title: "Vai Tu Nospiedīsi Pogu?", yes: "Es nospiedīšu!", no: "Nekādā gadījumā", question: "Jautājums", of: "no" }
+            en: { title: "Will You Press The Button?", yes: "I will press it!", no: "No way" },
+            ru: { title: "Нажмёшь ли ты кнопку?", yes: "Я нажму её!", no: "Ни за что" },
+            lv: { title: "Vai Tu Nospiedīsi Pogu?", yes: "Es nospiedīšu!", no: "Nekādā gadījumā" }
         };
 
         const defaultDilemmasEN = [
@@ -431,7 +431,7 @@
             { text: "Ты овладеешь всеми музыкальными инструментами, НО сможешь выступать только в полных средневековых рыцарских доспехах. Нажмёшь кнопку?", yes: 74, no: 26 },
             { text: "Ты можешь разговаривать с растениями и ускорять их рост, НО они драматично кричат, когда ты их подрезаешь. Нажмёшь кнопку?", yes: 53, no: 47 },
             { text: "У тебя будет магическая сумка с любой едой, которую ты захочешь, НО она тихо оскорбляет тебя каждый раз, когда ты её открываешь. Нажмёшь кнопку?", yes: 85, no: 15 },
-            { text: "Ты можешь путешествовать в прошлое, НО только на 60 секунд, после чего тебя затягивает обратно. Нажмёшь кнопку?", yes: 79, no: 21 },
+            { text: "Ты можете путешествовать в прошлое, НО только на 60 секунд, после чего тебя затягивает обратно. Нажмёшь кнопку?", yes: 79, no: 21 },
             { text: "Ты выспишься за секунду и станешь звездой интернета с миллионами подписчиков, НО скорость твоего интернета навсегда упадет до 1 Мбит/с. Нажмёшь кнопку?", yes: 25, no: 75 },
             { text: "Ты можете мгновенно залечить любой мелкий порез или ушиб, НО для этого нужно станцевать глупый победный танец. Нажмёшь кнопку?", yes: 95, no: 5 },
             { text: "Ты полностью контролируешь свои сны, НО во сне храпишь как заведенная бензопила. Нажмёшь кнопку?", yes: 63, no: 37 },
@@ -470,17 +470,7 @@
             { text: "Tu atrodi maku, kas katru reizi pēc aizvēršanas rada $20 banknoti, BUT tu uz visiem laikiem zaudē 1 centimetru sava auguma. Vai nospiedīsi pogu?", yes: 35, no: 65 }
         ];
 
-        // Safe Storage Helper wrapper to prevent browser sandbox environment crashes
-        const safeStorage = {
-            getItem(key) {
-                try { return localStorage.getItem(key); } catch (e) { return null; }
-            },
-            setItem(key, value) {
-                try { localStorage.setItem(key, value); } catch (e) { }
-            }
-        };
-
-        let currentLang = safeStorage.getItem('game_lang') || 'lv';
+        let currentLang = localStorage.getItem('game_lang') || 'lv';
         let dilemmas = [];
         let currentIndex = 0;
         let hasVoted = false;
@@ -499,22 +489,24 @@
         const topProgressBar = document.getElementById("top-progress");
 
         function initDilemmas() {
-            const stored = safeStorage.getItem(`dilemmas_${currentLang}`);
+            // Vienmēr ielādējam svaigus tulkojumus atkarībā no izvēlētās valodas
+            if (currentLang === 'lv') dilemmas = JSON.parse(JSON.stringify(defaultDilemmasLV));
+            else if (currentLang === 'ru') dilemmas = JSON.parse(JSON.stringify(defaultDilemmasRU));
+            else dilemmas = JSON.parse(JSON.stringify(defaultDilemmasEN));
+
+            // Mēģinām atjaunot spēlētāja nobalsoto statistiku no atmiņas, ja tāda ir
+            const stored = localStorage.getItem(`dilemmas_${currentLang}`);
             if (stored) {
                 try {
-                    dilemmas = JSON.parse(stored);
-                } catch(e) {
-                    dilemmas = [];
-                }
-            } 
-            
-            if (!dilemmas || dilemmas.length === 0) {
-                if (currentLang === 'lv') dilemmas = JSON.parse(JSON.stringify(defaultDilemmasLV));
-                else if (currentLang === 'ru') dilemmas = JSON.parse(JSON.stringify(defaultDilemmasRU));
-                else dilemmas = JSON.parse(JSON.stringify(defaultDilemmasEN));
+                    const parsedStored = JSON.parse(stored);
+                    // Pārbaudām, vai dati atbilst masīva izmēram
+                    if (parsedStored && parsedStored.length === dilemmas.length) {
+                        dilemmas = parsedStored;
+                    }
+                } catch(e) {}
             }
 
-            const storedIndex = safeStorage.getItem(`index_${currentLang}`);
+            const storedIndex = localStorage.getItem(`index_${currentLang}`);
             currentIndex = storedIndex ? parseInt(storedIndex, 10) : 0;
             if (isNaN(currentIndex) || currentIndex >= dilemmas.length || currentIndex < 0) {
                 currentIndex = 0;
@@ -633,7 +625,7 @@
                 buttons[1].classList.add("selected");
             }
 
-            safeStorage.setItem(`dilemmas_${currentLang}`, JSON.stringify(dilemmas));
+            localStorage.setItem(`dilemmas_${currentLang}`, JSON.stringify(dilemmas));
 
             const current = dilemmas[currentIndex];
             const totalVotes = current.yes + current.no;
@@ -662,7 +654,7 @@
 
             setTimeout(() => {
                 currentIndex = (currentIndex + 1) % dilemmas.length;
-                safeStorage.setItem(`index_${currentLang}`, currentIndex);
+                localStorage.setItem(`index_${currentLang}`, currentIndex);
                 loadDilemma();
             }, 2600);
         }
@@ -672,14 +664,14 @@
             else if (currentLang === 'en') currentLang = 'ru';
             else currentLang = 'lv';
 
-            safeStorage.setItem('game_lang', currentLang);
+            localStorage.setItem('game_lang', currentLang);
             
             streak = 0;
             streakVal.innerText = streak;
             
             updateInterfaceStrings();
             initDilemmas();
-            loadDilemma();
+            loadDilemma(); // Šī rinda tagad uzreiz nomainīs tekošā jautājuma tekstu uz jauno valodu
         }
 
         function toggleTheme() {
@@ -695,7 +687,7 @@
             }
         }
 
-        // Run setup safely
+        // Inicializācija
         updateInterfaceStrings();
         initDilemmas();
         loadDilemma();
