@@ -409,7 +409,7 @@
             { text: "Ты можешь дышать под водой, НО акулы находят тебя безумно привлекательным. Нажмёшь кнопку?", yes: 48, no: 52 },
             { text: "Ты станешь гениальным шеф-поваром, НО все твои блюда будут выглядеть невероятно уродливо. Нажмёшь кнопку?", yes: 90, no: 10 },
             { text: "Ты можешь становиться невидимкой, НО только когда твои глаза полностью закрыты. Нажмёшь кнопку?", yes: 59, no: 41 },
-            { text: "Тебе платят $500 каждый день просто за то, что ты существуешь, НО ты больше никогда не сможешь носить обувь. Нажмёшь кнопку?", yes: 73, no: 27 },
+            { text: "Тебе платят $500 каждый день просто за то, что ты существует, НО ты больше никогда не сможешь носить обувь. Нажмёшь кнопку?", yes: 73, no: 27 },
             { text: "Ты станешь лучшим игроком в своей любимой игре, НО сможешь играть в неё только на 5-дюймовом экране. Нажмёшь кнопку?", yes: 61, no: 39 },
             { text: "Ты можешь убрать всю комнату одним щелчком пальцев, НО твоя подушка всегда будет теплой с обеих сторон. Нажмёшь кнопку?", yes: 77, no: 23 },
             { text: "Ты найдешь кошелек, дающий $20 каждый раз, когда ты его закрываешь, НО ты навсегда уменьшишься в росте на 1 сантиметр. Нажмёшь кнопку?", yes: 35, no: 65 },
@@ -470,7 +470,17 @@
             { text: "Tu atrodi maku, kas katru reizi pēc aizvēršanas rada $20 banknoti, BUT tu uz visiem laikiem zaudē 1 centimetru sava auguma. Vai nospiedīsi pogu?", yes: 35, no: 65 }
         ];
 
-        let currentLang = localStorage.getItem('game_lang') || 'lv';
+        // Safe Storage Helper wrapper to prevent browser sandbox environment crashes
+        const safeStorage = {
+            getItem(key) {
+                try { return localStorage.getItem(key); } catch (e) { return null; }
+            },
+            setItem(key, value) {
+                try { localStorage.setItem(key, value); } catch (e) { }
+            }
+        };
+
+        let currentLang = safeStorage.getItem('game_lang') || 'lv';
         let dilemmas = [];
         let currentIndex = 0;
         let hasVoted = false;
@@ -489,7 +499,7 @@
         const topProgressBar = document.getElementById("top-progress");
 
         function initDilemmas() {
-            const stored = localStorage.getItem(`dilemmas_${currentLang}`);
+            const stored = safeStorage.getItem(`dilemmas_${currentLang}`);
             if (stored) {
                 try {
                     dilemmas = JSON.parse(stored);
@@ -504,7 +514,7 @@
                 else dilemmas = JSON.parse(JSON.stringify(defaultDilemmasEN));
             }
 
-            const storedIndex = localStorage.getItem(`index_${currentLang}`);
+            const storedIndex = safeStorage.getItem(`index_${currentLang}`);
             currentIndex = storedIndex ? parseInt(storedIndex, 10) : 0;
             if (isNaN(currentIndex) || currentIndex >= dilemmas.length || currentIndex < 0) {
                 currentIndex = 0;
@@ -576,7 +586,7 @@
 
                 particle.animate([
                     { transform: 'translate(-50%, -50%) scale(1.2)', opacity: 1 },
-                    { transform: `translate(calc(-50% + ${x}px), calc(-50% + ${y}px)) scale(0)', opacity: 0 }
+                    { transform: `translate(calc(-50% + ${x}px), calc(-50% + ${y}px)) scale(0)`, opacity: 0 }
                 ], {
                     duration: 600 + Math.random() * 300,
                     easing: 'cubic-bezier(0.1, 0.8, 0.3, 1)'
@@ -623,7 +633,7 @@
                 buttons[1].classList.add("selected");
             }
 
-            localStorage.setItem(`dilemmas_${currentLang}`, JSON.stringify(dilemmas));
+            safeStorage.setItem(`dilemmas_${currentLang}`, JSON.stringify(dilemmas));
 
             const current = dilemmas[currentIndex];
             const totalVotes = current.yes + current.no;
@@ -652,7 +662,7 @@
 
             setTimeout(() => {
                 currentIndex = (currentIndex + 1) % dilemmas.length;
-                localStorage.setItem(`index_${currentLang}`, currentIndex);
+                safeStorage.setItem(`index_${currentLang}`, currentIndex);
                 loadDilemma();
             }, 2600);
         }
@@ -662,7 +672,7 @@
             else if (currentLang === 'en') currentLang = 'ru';
             else currentLang = 'lv';
 
-            localStorage.setItem('game_lang', currentLang);
+            safeStorage.setItem('game_lang', currentLang);
             
             streak = 0;
             streakVal.innerText = streak;
@@ -685,7 +695,7 @@
             }
         }
 
-        // Inicializācija
+        // Run setup safely
         updateInterfaceStrings();
         initDilemmas();
         loadDilemma();
